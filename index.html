@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Droply</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b0c;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding-bottom: 60px;
+        }
+
+        /* Шапка */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #161618;
+            margin-bottom: 30px;
+        }
+
+        .logo-block {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            height: 24px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Переключатель языка */
+        .lang-switch {
+            background: #161618;
+            border: 1px solid #232326;
+            color: #94a3b8;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-login {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-try-free {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Главный экран */
+        .hero {
+            margin-bottom: 35px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #161618;
+            border: 1px solid #232326;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #eff0f3;
+            margin-bottom: 20px;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #10b981;
+            border-radius: 50%;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 15px;
+            min-height: 135px; 
+        }
+
+        .typing-text {
+            color: #94a3b8;
+            border-right: 2px solid #ffffff;
+            white-space: pre-wrap;
+            animation: caret 0.75s step-end infinite;
+        }
+
+        @keyframes caret {
+            from, to { border-color: transparent }
+            50% { border-color: #ffffff; }
+        }
+
+        .hero p {
+            color: #94a3b8;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .btn-main {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-more {
+            width: 100%;
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #232326;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Симулятор редактора */
+        .editor-container {
+            background: #111113;
+            border: 1px solid #1c1c1f;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 45px;
+        }
+
+        .editor-top {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .window-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .dot-1 { background: #ef4444; }
+        .dot-2 { background: #f59e0b; }
+        .dot-3 { background: #10b981; }
+
+        .editor-url {
+            color: #4b5563;
+            font-size: 12px;
+            margin-left: 15px;
+        }
+
+        .editor-content {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 12px;
+        }
+
+        .editor-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 11px;
+            color: #4b5563;
+            border-right: 1px solid #1c1c1f;
+            padding-right: 5px;
+        }
+
+        .sidebar-node {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-node::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            background: #374151;
+            border-radius: 50%;
+        }
+
+        .sidebar-node.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .sidebar-node.active::before {
+            background: #3b82f6;
+        }
+
+        .editor-workspace {
+            background: #070708;
+            border-radius: 10px;
+            min-height: 140px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            border: 1px dashed #1c1c1f;
+        }
+
+        .interactive-card {
+            width: 85%;
+            padding: 14px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .state-card {
+            background: #1e1b4b;
+            color: #c7d2fe;
+            border: 1px solid #312e81;
+        }
+
+        .state-button {
+            background: #2563eb;
+            color: #ffffff;
+            width: 70%;
+            border-radius: 20px;
+        }
+
+        .editor-right-panel {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 9px;
+            color: #4b5563;
+            text-align: right;
+            line-height: 1.4;
+            pointer-events: none;
+        }
+
+        .features-line {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .feature-mini {
+            background: #111113;
+            border: 1px solid #1c1c1f;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #94a3b8;
+            text-align: center;
+        }
+
+        /* Преимущества */
+        .section-header {
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .benefit-card {
+            background: #111113;
+            border: 1px solid #1c1c1f;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .benefit-icon {
+            width: 36px;
+            height: 36px;
+            background: #1c1c1f;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        .benefit-card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        /* Тарифы */
+        .tariffs-section {
+            margin-top: 40px;
+        }
+
+        .tariff-box {
+            background: #111113;
+            border: 1px solid #1c1c1f;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .tariff-box.premium {
+            border-color: #232326;
+        }
+
+        .tariff-tag {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 10px;
+            background: #1c1c1f;
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: #94a3b8;
+        }
+
+        .tariff-title {
+            font-size: 16px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .tariff-price {
+            font-size: 34px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .tariff-price span {
+            font-size: 14px;
+            color: #4b5563;
+            font-weight: 400;
+        }
+
+        .tariff-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .tariff-list li {
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tariff-list li::before {
+            content: "-";
+            color: #10b981;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <header>
+        <div class="logo-block">
+            <img src="logo.png" alt="" class="logo-img" onerror="this.style.display='none'">
+            <span class="logo-text">Droply</span>
+        </div>
+        <div class="header-right">
+            <button class="lang-switch" id="lang-toggle">EN</button>
+            <button class="btn-login" id="t-login">Войти</button>
+            <button class="btn-try-free" id="t-try">Попробовать</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="badge">
+            <div class="badge-dot"></div>
+            <span id="t-badge">Визуальный конструктор сайтов</span>
+        </div>
+        
+        <h1><span id="t-title-start">Создавайте сайты</span> <br><span class="typing-text" id="type-box"></span></h1>
+        
+        <p id="t-hero-p">Профессиональный редактор с drag & drop, анимациями, 3D-эффектами и мгновенной публикацией.</p>
+        
+        <div class="action-buttons">
+            <button class="btn-main" id="t-btn-main">Начать бесплатно</button>
+            <button class="btn-more" id="t-btn-more">Узнать больше</button>
+        </div>
+    </section>
+
+    <div class="editor-container">
+        <div class="editor-top">
+            <div class="window-dots">
+                <span class="dot-1"></span>
+                <span class="dot-2"></span>
+                <span class="dot-3"></span>
+            </div>
+            <span class="editor-url">droply.site/editor</span>
+        </div>
+        <div class="editor-content">
+            <div class="editor-sidebar">
+                <div class="sidebar-node" id="t-side-1">Контейнер</div>
+                <div class="sidebar-node" id="t-side-2">Заголовок</div>
+                <div class="sidebar-node" id="t-side-3">Параграф</div>
+                <div class="sidebar-node active" id="t-side-4">Компонент</div>
+            </div>
+            <div class="editor-workspace" id="workspace">
+                <div class="interactive-card state-card" id="widget-element">Карточки</div>
+                <div class="editor-right-panel" id="t-panel">
+                    Ширина: auto<br>Высота: auto<br>Радиус: 8px
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="features-line">
+        <div class="feature-mini" id="t-mini-1">Публикация за 1 клик</div>
+        <div class="feature-mini" id="t-mini-2">Безопасный хостинг</div>
+    </div>
+
+    <section>
+        <div class="section-header">
+            <h2 id="t-sec1-h">Всё что нужно для сайта</h2>
+            <p id="t-sec1-p">Инструменты, которые раньше требовали знания кода — теперь доступны каждому.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">DD</div>
+            <h3 id="t-ben1-h">Drag & Drop редактор</h3>
+            <p id="t-ben1-p">Перетаскивайте элементы как в Figma. Всё визуально, без написания кода.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">MB</div>
+            <h3 id="t-ben2-h">Адаптивный дизайн</h3>
+            <p id="t-ben2-p">Три режима просмотра: Desktop, Tablet, Mobile. Один редактор для всех устройств.</p>
+        </div>
+
+        <div class="benefit-card">
+            <div class="benefit-icon">FX</div>
+            <h3 id="t-ben3-h">Логика без кода</h3>
+            <p id="t-ben3-p">Показать/скрыть, навигация, прокрутка — настраивается через интерфейс.</p>
+        </div>
+    </section>
+
+    <section class="tariffs-section">
+        <div class="section-header">
+            <h2 id="t-sec2-h">Простые тарифы</h2>
+            <p id="t-sec2-p">Начните бесплатно. Экспорт кода всегда бесплатен.</p>
+        </div>
+
+        <div class="tariff-box">
+            <div class="tariff-title" id="t-tar1-title">Бесплатно</div>
+            <div class="tariff-price">0 ₽ <span id="t-tar1-sub">навсегда</span></div>
+            <ul class="tariff-list">
+                <li id="t-tar1-l1">3 сайта</li>
+                <li id="t-tar1-l2">Drag & drop редактор</li>
+                <li id="t-tar1-l3">Публикация сайта</li>
+                <li id="t-tar1-l4">Экспорт HTML/CSS кода</li>
+            </ul>
+            <button class="btn-more" style="padding: 12px;" id="t-tar1-btn">Выбрать тариф</button>
+        </div>
+
+        <div class="tariff-box premium">
+            <div class="tariff-tag" id="t-tar2-tag">Популярный выбор</div>
+            <div class="tariff-title">Pro</div>
+            <div class="tariff-price">990 ₽ <span id="t-tar2-sub">/ месяц</span></div>
+            <ul class="tariff-list">
+                <li id="t-tar2-l1">Неограниченно сайтов</li>
+                <li id="t-tar2-l2">Все премиум шаблоны</li>
+                <li id="t-tar2-l3">Смарт-логика сценариев</li>
+                <li id="t-tar2-l4">История версий изменений</li>
+            </ul>
+            <button class="btn-main" style="padding: 12px;" id="t-tar2-btn">Попробовать Pro</button>
+        </div>
+    </section>
+
+</div>
+
+<script>
+    // Словарь языков
+    const translations = {
+        ru: {
+            login: "Войти", try: "Попробовать", badge: "Визуальный конструктор сайтов",
+            titleStart: "Создавайте сайты", typing: "без единой строки кода",
+            heroP: "Профессиональный редактор с drag & drop, анимациями, 3D-эффектами и мгновенной публикацией.",
+            btnMain: "Начать бесплатно", btnMore: "Узнать больше",
+            side1: "Контейнер", side2: "Заголовок", side3: "Параграф", side4: "Компонент",
+            widgetCard: "Карточки", widgetBtn: "Кнопка",
+            panel: "Ширина: auto<br>Высота: auto<br>Радиус: 8px",
+            mini1: "Публикация за 1 клик", mini2: "Безопасный хостинг",
+            sec1H: "Всё что нужно для сайта", sec1P: "Инструменты, которые раньше требовали знания кода — теперь доступны каждому.",
+            ben1H: "Drag & Drop редактор", ben1P: "Перетаскивайте элементы как в Figma. Всё визуально, без написания кода.",
+            ben2H: "Адаптивный дизайн", ben2P: "Три режима просмотра: Desktop, Tablet, Mobile. Один редактор для всех устройств.",
+            ben3H: "Логика без кода", ben3P: "Показать/скрыть, навигация, прокрутка — настраивается через интерфейс.",
+            sec2H: "Простые тарифы", sec2P: "Начните бесплатно. Экспорт кода всегда бесплатен.",
+            tar1Title: "Бесплатно", tar1Sub: "навсегда", tar1Btn: "Выбрать тариф",
+            tar1L1: "3 сайта", tar1L2: "Drag & drop редактор", tar1L3: "Публикация сайта", tar1L4: "Экспорт HTML/CSS кода",
+            tar2Tag: "Популярный выбор", tar2Sub: "/ месяц", tar2Btn: "Попробовать Pro",
+            tar2L1: "Неограниченно сайтов", tar2L2: "Все премиум шаблоны", tar2L3: "Смарт-логика сценариев", tar2L4: "История версий изменений"
+        },
+        en: {
+            login: "Login", try: "Try Free", badge: "Visual Website Builder",
+            titleStart: "Build websites", typing: "without a single line of code",
+            heroP: "Professional editor with drag & drop, animations, 3D effects, and instant publishing.",
+            btnMain: "Get Started Free", btnMore: "Learn More",
+            side1: "Container", side2: "Heading", side3: "Paragraph", side4: "Component",
+            widgetCard: "Cards", widgetBtn: "Button",
+            panel: "Width: auto<br>Height: auto<br>Radius: 8px",
+            mini1: "1-click publishing", mini2: "Secure hosting",
+            sec1H: "Everything you need", sec1P: "Tools that used to require code knowledge are now available to everyone.",
+            ben1H: "Drag & Drop Editor", ben1P: "Drag elements like in Figma. Entirely visual, no coding needed.",
+            ben2H: "Responsive Design", ben2P: "Three view modes: Desktop, Tablet, Mobile. One editor for all devices.",
+            ben3H: "No-Code Logic", ben3P: "Show/hide, navigation, scrolling — all configured via the interface.",
+            sec2H: "Simple Pricing", sec2P: "Start for free. Code export is always free.",
+            tar1Title: "Free", tar1Sub: "forever", tar1Btn: "Choose Plan",
+            tar1L1: "3 websites", tar1L2: "Drag & drop editor", tar1L3: "Website publishing", tar1L4: "HTML/CSS code export",
+            tar2Tag: "Popular choice", tar2Sub: "/ month", tar2Btn: "Try Pro",
+            tar2L1: "Unlimited websites", tar2L2: "All premium templates", tar2L3: "Smart logic & scenarios", tar2L4: "Version history tracking"
+        }
+    };
+
+    let currentLang = "ru";
+    let letterIndex = 0;
+    let typingTimer;
+
+    const box = document.getElementById("type-box");
+
+    function startTyping() {
+        const targetText = translations[currentLang].typing;
+        if (letterIndex < targetText.length) {
+            box.textContent += targetText.charAt(letterIndex);
+            letterIndex++;
+            typingTimer = setTimeout(startTyping, 110);
+        } else {
+            typingTimer = setTimeout(() => {
+                box.textContent = "";
+                letterIndex = 0;
+                startTyping();
+            }, 3500);
+        }
+    }
+
+    function updateLanguage(lang) {
+        currentLang = lang;
+        document.getElementById("t-login").textContent = translations[lang].login;
+        document.getElementById("t-try").textContent = translations[lang].try;
+        document.getElementById("t-badge").textContent = translations[lang].badge;
+        document.getElementById("t-title-start").textContent = translations[lang].titleStart;
+        document.getElementById("t-hero-p").textContent = translations[lang].heroP;
+        document.getElementById("t-btn-main").textContent = translations[lang].btnMain;
+        document.getElementById("t-btn-more").textContent = translations[lang].btnMore;
+        document.getElementById("t-side-1").textContent = translations[lang].side1;
+        document.getElementById("t-side-2").textContent = translations[lang].side2;
+        document.getElementById("t-side-3").textContent = translations[lang].side3;
+        document.getElementById("t-side-4").textContent = translations[lang].side4;
+        document.getElementById("t-panel").innerHTML = translations[lang].panel;
+        document.getElementById("t-mini-1").textContent = translations[lang].mini1;
+        document.getElementById("t-mini-2").textContent = translations[lang].mini2;
+        document.getElementById("t-sec1-h").textContent = translations[lang].sec1H;
+        document.getElementById("t-sec1-p").textContent = translations[lang].sec1P;
+        document.getElementById("t-ben1-h").textContent = translations[lang].ben1H;
+        document.getElementById("t-ben1-p").textContent = translations[lang].ben1P;
+        document.getElementById("t-ben2-h").textContent = translations[lang].ben2H;
+        document.getElementById("t-ben2-p").textContent = translations[lang].ben2P;
+        document.getElementById("t-ben3-h").textContent = translations[lang].ben3H;
+        document.getElementById("t-ben3-p").textContent = translations[lang].ben3P;
+        document.getElementById("t-sec2-h").textContent = translations[lang].sec2H;
+        document.getElementById("t-sec2-p").textContent = translations[lang].sec2P;
+        document.getElementById("t-tar1-title").textContent = translations[lang].tar1Title;
+        document.getElementById("t-tar1-sub").textContent = translations[lang].tar1Sub;
+        document.getElementById("t-tar1-btn").textContent = translations[lang].tar1Btn;
+        document.getElementById("t-tar1-l1").textContent = translations[lang].tar1L1;
+        document.getElementById("t-tar1-l2").textContent = translations[lang].tar1L2;
+        document.getElementById("t-tar1-l3").textContent = translations[lang].tar1L3;
+        document.getElementById("t-tar1-l4").textContent = translations[lang].tar1L4;
+        document.getElementById("t-tar2-tag").textContent = translations[lang].tar2Tag;
+        document.getElementById("t-tar2-sub").textContent = translations[lang].tar2Sub;
+        document.getElementById("t-tar2-btn").textContent = translations[lang].tar2Btn;
+        document.getElementById("t-tar2-l1").textContent = translations[lang].tar2L1;
+        document.getElementById("t-tar2-l2").textContent = translations[lang].tar2L2;
+        document.getElementById("t-tar2-l3").textContent = translations[lang].tar2L3;
+        document.getElementById("t-tar2-l4").textContent = translations[lang].tar2L4;
+
+        // Сброс и перезапуск анимации печати под новый язык
+        clearTimeout(typingTimer);
+        box.textContent = "";
+        letterIndex = 0;
+        startTyping();
+        updateWidgetText();
+    }
+
+    // Переключатель в шапке
+    const langBtn = document.getElementById("lang-toggle");
+    langBtn.addEventListener("click", () => {
+        if (currentLang === "ru") {
+            langBtn.textContent = "RU";
+            updateLanguage("en");
+        } else {
+            langBtn.textContent = "EN";
+            updateLanguage("ru");
+        }
+    });
+
+    // Интерактивный виджет
+    const workspace = document.getElementById("workspace");
+    const element = document.getElementById("widget-element");
+    let currentStyle = 0;
+
+    function updateWidgetText() {
+        if (currentStyle === 0) {
+            element.textContent = translations[currentLang].widgetCard;
+        } else {
+            element.textContent = translations[currentLang].widgetBtn;
+        }
+    }
+
+    workspace.addEventListener("click", () => {
+        if (currentStyle === 0) {
+            element.className = "interactive-card state-button";
+            currentStyle = 1;
+        } else {
+            element.className = "interactive-card state-card";
+            currentStyle = 0;
+        }
+        updateWidgetText();
+    });
+
+    // Первый запуск страницы
+    updateLanguage("ru");
+</script>
+
+</body>
+</html>
